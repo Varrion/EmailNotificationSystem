@@ -1,4 +1,5 @@
-﻿using API.Application.Dto;
+﻿using System.Text;
+using API.Application.Dto;
 using API.Application.Interfaces;
 using API.Domain.Entities;
 using Azure.Storage.Blobs;
@@ -100,7 +101,11 @@ public class ClientController : ControllerBase
         };
 
         var jsonObject = JsonConvert.SerializeObject(emailMessage);
-        await _queueClient.SendMessageAsync(jsonObject);
+
+        // Convert the JSON string to Base64
+        var plainTextBytes = Encoding.UTF8.GetBytes(jsonObject);
+        var base64EncodedMessage = Convert.ToBase64String(plainTextBytes);
+        await _queueClient.SendMessageAsync(base64EncodedMessage);
 
         return Ok($"Email sent for {emailMessage.To}, message added to queue.");
     }

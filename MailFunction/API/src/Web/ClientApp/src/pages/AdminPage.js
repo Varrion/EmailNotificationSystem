@@ -104,7 +104,7 @@ function AdminPage() {
     clients.forEach((client) => {
       const templateId = selectedTemplates[client.id];
       const template = templates.find((t) => t.id === parseInt(templateId, 10));
-      const updatedMarketingData = editedTemplates[client.id] || template.marketingData;
+      const updatedMarketingData = editedTemplates[client.id] || template?.marketingData;
 
       if (template) {
         xml += `
@@ -191,7 +191,7 @@ function AdminPage() {
                 Edit
               </button>
               <button className="btn btn-warning ml-2" onClick={() => handleTriggerQueue(client.id)}>
-                Trigger Action
+                Send Email
               </button>
             </td>
           </tr>
