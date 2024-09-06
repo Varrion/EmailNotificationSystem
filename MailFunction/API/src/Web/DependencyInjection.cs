@@ -10,10 +10,7 @@ public static class DependencyInjection
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        services.AddHttpContextAccessor();
-
-        services.AddHealthChecks()
-            .AddDbContextCheck<EmailDbContext>();
+        //services.AddHttpContextAccessor();
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 

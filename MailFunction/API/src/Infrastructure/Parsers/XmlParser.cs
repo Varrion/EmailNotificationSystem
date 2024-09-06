@@ -76,7 +76,7 @@ public class XmlParser : IXmlParser
         {
             Async = true
         };
-        using (var reader = XmlReader.Create(xmlStream))
+        using (var reader = XmlReader.Create(xmlStream, settings))
         {
             while (await reader.ReadAsync())
             {

@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 namespace API.Infrastructure.Data;
@@ -7,10 +7,8 @@ public class EmailDbContextFactory : IDesignTimeDbContextFactory<EmailDbContext>
 {
     public EmailDbContext CreateDbContext(string[] args)
     {
-        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Web");
-
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(basePath)
+            .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .Build();
 

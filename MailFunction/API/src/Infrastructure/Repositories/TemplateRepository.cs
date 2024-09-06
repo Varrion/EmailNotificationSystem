@@ -13,6 +13,27 @@ public class TemplateRepository : ITemplateRepository
         _context = context;
     }
 
+    public async Task AddTemplateAsync(Template template)
+    {
+        _context.Template.Add(template);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteTemplateAsync(int id)
+    {
+        var template = await _context.Template.FindAsync(id);
+        if (template != null)
+        {
+            _context.Template.Remove(template);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<IEnumerable<Template>> GetAllTemplatesAsync()
+    {
+        return await _context.Template.ToListAsync();
+    }
+
     public async Task<Template?> GetTemplateByIdAsync(int id)
     {
         return await _context.Template.FirstOrDefaultAsync(x => x.Id == id);
@@ -21,5 +42,11 @@ public class TemplateRepository : ITemplateRepository
     public async Task<Template?> GetTemplateByIdOrNameAsync(int id, string name = "")
     {
         return await _context.Template.FirstOrDefaultAsync(x => x.Id == id || x.Name == name);
+    }
+
+    public async Task UpdateTemplateAsync(Template template)
+    {
+        _context.Template.Update(template);
+        await _context.SaveChangesAsync();
     }
 }

@@ -13,9 +13,35 @@ public class ClientRepository : IClientRepository
         _context = context;
     }
 
+    public async Task AddClientAsync(Client client)
+    {
+        _context.Client.Add(client);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<Client?> GetClientByIdAsync(int id)
     {
-        return await _context.Client
-            .FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.Client.FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<IEnumerable<Client>> GetAllClientsAsync()
+    {
+        return await _context.Client.ToListAsync();
+    }
+
+    public async Task UpdateClientAsync(Client client)
+    {
+        _context.Client.Update(client);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteClientAsync(int id)
+    {
+        var client = await _context.Client.FindAsync(id);
+        if (client != null)
+        {
+            _context.Client.Remove(client);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -11,10 +11,8 @@ public static class InitialiserExtensions
         using var scope = app.Services.CreateScope();
 
         var initialiser = scope.ServiceProvider.GetRequiredService<EmailDbContextInitialiser>();
-        
-        await Task.Delay(10);
         //await initialiser.InitialiseAsync();
-
+        await Task.Delay(1);
         //await initialiser.SeedAsync();
     }
 

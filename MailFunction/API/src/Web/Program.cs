@@ -1,9 +1,18 @@
-using API.Infrastructure.Data;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -22,9 +31,13 @@ else
     app.UseHsts();
 }
 
-app.UseHealthChecks("/health");
-app.UseHttpsRedirection();
+//app.UseHealthChecks("/health");
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseCors("AllowSpecificOrigins");
 
 app.UseSwaggerUi(settings =>
 {
@@ -41,7 +54,6 @@ app.MapRazorPages();
 app.MapFallbackToFile("index.html");
 
 app.UseExceptionHandler(options => { });
-
 
 app.MapEndpoints();
 

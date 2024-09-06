@@ -1,6 +1,7 @@
 ﻿using API.Application.Dto;
 using API.Application.Factories;
 using API.Application.Interfaces;
+using API.Application.Services;
 using API.Application.Strategies;
 using API.Application.UseCases;
 using API.Infrastructure.Data;
@@ -23,6 +24,8 @@ public static class DependencyInjection
         services.AddDbContext<EmailDbContext>(options =>
             options.UseSqlite(connectionString));
 
+        services.AddScoped<EmailDbContextInitialiser>();
+
         services.Configure<SenderDto>(configuration.GetSection("TomiMedia"));
         services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<SenderDto>>().Value);
 
@@ -34,7 +37,6 @@ public static class DependencyInjection
 
         services.AddScoped<IEmailDbContext>(provider => provider.GetRequiredService<EmailDbContext>());
 
-        services.AddScoped<EmailDbContextInitialiser>();
 
         services.AddScoped<IEmailSender, MockEmailSenderService>();
 
@@ -42,6 +44,8 @@ public static class DependencyInjection
         services.AddScoped<ITemplateRepository, TemplateRepository>();
         services.AddScoped<IXmlParser, XmlParser>();
         services.AddScoped<IBulkSendEmailUseCase, BulkSendEmailUseCase>();
+        services.AddScoped<IClientService, ClientService>();
+        services.AddScoped<ITemplateService, TemplateService>();
 
         return services;
     }
