@@ -20,9 +20,9 @@ public class CheckDbEmailProcessingStrategy : IEmailProcessingStrategy
         _emailSender = emailSender;
     }
 
-    public async Task ExecuteAsync(string xmlFilePath)
+    public async Task ExecuteAsync(Stream xmlStream)
     {
-        var clientsWithTemplateId = await _xmlParser.ParseClientTemplateIdFromXmlAsync(xmlFilePath); // Parse ClientId and TemplateId
+        var clientsWithTemplateId = await _xmlParser.ParseClientTemplateIdFromXmlAsync(xmlStream); // Parse ClientId and TemplateId
 
         var tasks = new List<Task>();
         foreach (var clientTemplate in clientsWithTemplateId)

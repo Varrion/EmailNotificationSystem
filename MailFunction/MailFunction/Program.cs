@@ -1,30 +1,31 @@
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-internal class Program
+public class Program
 {
     private static void Main(string[] args)
     {
         var host = new HostBuilder()
             .ConfigureFunctionsWebApplication()
-            .ConfigureServices(s =>
+            .ConfigureAppConfiguration((context, config) =>
             {
-                s.AddApplicationInsightsTelemetryWorkerService();
-                s.ConfigureFunctionsApplicationInsights();
-                s.Configure<LoggerFilterOptions>(options =>
-                {
-                    // The Application Insights SDK adds a default logging filter that instructs ILogger to capture only Warning and more severe logs. Application Insights requires an explicit override.
-                    // Log levels can also be configured using appsettings.json. For more information, see https://learn.microsoft.com/en-us/azure/azure-monitor/app/worker-service#ilogger-logs
-                    LoggerFilterRule toRemove = options.Rules.FirstOrDefault(rule => rule.ProviderName
-                        == "Microsoft.Extensions.Logging.ApplicationInsights.ApplicationInsightsLoggerProvider");
+                var env = context.HostingEnvironment.EnvironmentName;
+                config.SetBasePath(Directory.GetCurrentDirectory())
+                      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                      .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true)
+                      .AddEnvironmentVariables();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                var configuration = context.Configuration;
 
-                    if (toRemove is not null)
-                    {
-                        options.Rules.Remove(toRemove);
-                    }
-                });
+                services.AddApplicationInsightsTelemetryWorkerService();
+                services.ConfigureFunctionsApplicationInsights();
+
+                services.AddApplicationServices();
+                services.AddInfrastructureServices(configuration);
             })
             .Build();
 

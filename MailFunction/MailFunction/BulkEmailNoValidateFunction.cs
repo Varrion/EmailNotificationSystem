@@ -2,6 +2,7 @@
 using API.Application.Interfaces;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace MailFunction
 {
@@ -15,10 +16,15 @@ namespace MailFunction
         {
             try
             {
-                using var blobStreamReader = new StreamReader(stream);
-                var content = await blobStreamReader.ReadToEndAsync().ConfigureAwait(false);
+                //using var blobStreamReader = new StreamReader(stream, Encoding.UTF8);
+                //var content = await blobStreamReader.ReadToEndAsync().ConfigureAwait(false);
 
-                await bulkSendEmailUse.ExecuteAsync(content, EmailXMLVerificationType.SkipDb);
+                //if (string.IsNullOrWhiteSpace(content))
+                //{
+                //    return;
+                //}
+
+                await bulkSendEmailUse.ExecuteAsync(stream, EmailXMLVerificationType.SkipDb);
             }
             catch (Exception ex)
             {

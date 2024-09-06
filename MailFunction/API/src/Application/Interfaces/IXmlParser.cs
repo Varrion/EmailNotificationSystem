@@ -3,7 +3,7 @@
 namespace API.Application.Interfaces;
 public interface IXmlParser
 {
-    Task<List<ClientIdTemplateIdDto>> ParseClientTemplateIdFromXmlAsync(string filePath);
+    Task<List<ClientIdTemplateIdDto>> ParseClientTemplateIdFromXmlAsync(Stream xmlStream);
 
-    Task<List<ClientMarketingDataDto>> ParseClientTemplateFromXmlAsync(string filePath);
+    Task<List<ClientMarketingDataDto>> ParseClientTemplateFromXmlAsync(Stream xmlStream);
 }

@@ -15,10 +15,7 @@ namespace MailFunction
         {
             try
             {
-                using var blobStreamReader = new StreamReader(stream);
-                var content = await blobStreamReader.ReadToEndAsync().ConfigureAwait(false);
-
-                await bulkSendEmailUse.ExecuteAsync(content, EmailXMLVerificationType.CheckDb);
+                await bulkSendEmailUse.ExecuteAsync(stream, EmailXMLVerificationType.CheckDb);
             }
             catch (Exception ex)
             {

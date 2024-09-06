@@ -17,33 +17,40 @@ public class SkipDbEmailProcessingStrategy : IEmailProcessingStrategy
         _senderDto = senderDto;
     }
 
-    public async Task ExecuteAsync(string xmlFilePath)
+    public async Task ExecuteAsync(Stream xmlStream)
     {
-        var clientMarketingDataList = await _xmlParser.ParseClientTemplateFromXmlAsync(xmlFilePath);
-
-        var tasks = new List<Task>();
-        foreach (var clientMarketingData in clientMarketingDataList)
+        try
         {
-            var client = await _clientRepository.GetClientByIdAsync(clientMarketingData.ClientId);
+            var clientMarketingDataList = await _xmlParser.ParseClientTemplateFromXmlAsync(xmlStream);
 
-            if (client == null)
+            var tasks = new List<Task>();
+            foreach (var clientMarketingData in clientMarketingDataList)
             {
-                continue;
+                var client = await _clientRepository.GetClientByIdAsync(clientMarketingData.ClientId);
+
+                if (client == null)
+                {
+                    continue;
+                }
+
+                if (clientMarketingData.MarketingData == null)
+                {
+                    continue;
+                }
+
+                tasks.Add(_emailSender.SendEmailAsync(
+                     _senderDto.Email,
+                    client?.EmailAddress ?? "TestMail",
+                    clientMarketingData.MarketingData.Content,
+                    clientMarketingData.MarketingData.Title
+                ));
             }
 
-            if (clientMarketingData.MarketingData == null)
-            {
-                continue;
-            }
-
-            tasks.Add(_emailSender.SendEmailAsync(
-                 _senderDto.Email,
-                client.EmailAddress,
-                clientMarketingData.MarketingData.Content,
-                clientMarketingData.MarketingData.Title
-            ));
+            await Task.WhenAll(tasks);
         }
-
-        await Task.WhenAll(tasks);
+        catch(Exception)
+        {
+            throw;
+        }
     }
 }
