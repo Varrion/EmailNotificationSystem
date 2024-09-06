@@ -17,4 +17,9 @@ public class TemplateRepository : ITemplateRepository
     {
         return await _context.Templates.FirstOrDefaultAsync(x => x.Id == id);
     }
+
+    public async Task<Template?> GetTemplateByIdOrNameAsync(int id, string name = "")
+    {
+        return await _context.Templates.FirstOrDefaultAsync(x => x.Id == id || x.Name == name);
+    }
 }

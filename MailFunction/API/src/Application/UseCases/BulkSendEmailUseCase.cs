@@ -1,21 +1,12 @@
-﻿using API.Application.Interfaces;
+﻿using API.Application.Enums;
+using API.Application.Interfaces;
 
 namespace API.Application.UseCases;
-public class BulkSendEmailUseCase(IXmlParser xmlParser, SendEmailUseCase sendEmailUseCase)
+public class BulkSendEmailUseCase(IEmailProcessingStrategyFactory strategyFactory) : IBulkSendEmailUseCase
 {
-    public async Task ExecuteAsync(string xmlFilePath)
+    public async Task ExecuteAsync(string xmlFilePath, EmailXMLVerificationType verificationType)
     {
-        // Parse clients from XML
-        var clients = await xmlParser.ParseClientsFromXmlAsync(xmlFilePath);
-
-        // Send emails in parallel
-        var tasks = new List<Task>();
-        foreach (var client in clients)
-        {
-            var task = sendEmailUseCase.ExecuteAsync(client.Id, client.TemplateId, client.MarketingData);
-            tasks.Add(task);
-        }
-
-        await Task.WhenAll(tasks);
+        var strategy = strategyFactory.GetStrategy(verificationType);
+        await strategy.ExecuteAsync(xmlFilePath);
     }
 }
