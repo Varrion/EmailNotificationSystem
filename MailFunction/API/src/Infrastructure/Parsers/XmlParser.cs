@@ -45,13 +45,7 @@ public class XmlParser : IXmlParser
                     Id = parsedClientId,
                     TemplateId = parsedTemplateId,
                     MarketingData = marketingData,
-                    Configuration = new EmailConfiguration
-                    {
-                        // Here, you can populate the EmailConfiguration fields as needed,
-                        // You could also add more XML fields to populate the EmailAddress if available
-                        ReceiveMarketingEmails = true, // Example setting, adjust as needed
-                        EmailAddress = "example@example.com" // Set a default email or pull it from XML
-                    }
+                    EmailAddress = "example@example.com"
                 };
 
                 clients.Add(client);

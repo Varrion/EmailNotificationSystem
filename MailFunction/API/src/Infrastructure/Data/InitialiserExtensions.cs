@@ -10,19 +10,19 @@ public static class InitialiserExtensions
     {
         using var scope = app.Services.CreateScope();
 
-        var initialiser = scope.ServiceProvider.GetRequiredService<EmailServiceDbContextInitialiser>();
+        var initialiser = scope.ServiceProvider.GetRequiredService<EmailDbContextInitialiser>();
 
         await initialiser.InitialiseAsync();
 
         //await initialiser.SeedAsync();
     }
 
-    public class EmailServiceDbContextInitialiser
+    public class EmailDbContextInitialiser
     {
-        private readonly ILogger<EmailServiceDbContextInitialiser> _logger;
-        private readonly EmailServiceDbContext _context;
+        private readonly ILogger<EmailDbContextInitialiser> _logger;
+        private readonly EmailDbContext _context;
 
-        public EmailServiceDbContextInitialiser(ILogger<EmailServiceDbContextInitialiser> logger, EmailServiceDbContext context)
+        public EmailDbContextInitialiser(ILogger<EmailDbContextInitialiser> logger, EmailDbContext context)
         {
             _logger = logger;
             _context = context;

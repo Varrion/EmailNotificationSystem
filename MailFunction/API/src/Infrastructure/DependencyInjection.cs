@@ -10,30 +10,31 @@ using API.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using static API.Infrastructure.Data.InitialiserExtensions;
 
 namespace Microsoft.Extensions.DependencyInjection;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var connectionString = configuration.GetConnectionString("MockDatabase");
+        Guard.Against.Null(connectionString, message: "Connection string 'MockDatabase' not found.");
+
+        services.AddDbContext<EmailDbContext>(options =>
+            options.UseSqlite(connectionString));
 
         services.Configure<SenderDto>(configuration.GetSection("TomiMedia"));
-
-        Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
-
-        // Setup Entity Framework with a SQL Server connection
-        services.AddDbContext<EmailServiceDbContext>(options =>
-            options.UseSqlServer("YourConnectionStringHere"));
-
         services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<SenderDto>>().Value);
 
-        services.AddScoped<IEmailProcessingStrategy, SkipDbEmailProcessingStrategy>();
-        services.AddScoped<IEmailProcessingStrategy, CheckDbEmailProcessingStrategy>();
+        services.AddScoped<SkipDbEmailProcessingStrategy>();
+        services.AddScoped<CheckDbEmailProcessingStrategy>();
 
         // Register factory
         services.AddScoped<IEmailProcessingStrategyFactory, EmailProcessingStrategyFactory>();
 
+        services.AddScoped<IEmailDbContext>(provider => provider.GetRequiredService<EmailDbContext>());
+
+        services.AddScoped<EmailDbContextInitialiser>();
 
         services.AddScoped<IEmailSender, MockEmailSenderService>();
 

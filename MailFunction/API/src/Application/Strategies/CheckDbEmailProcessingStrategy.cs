@@ -49,7 +49,7 @@ public class CheckDbEmailProcessingStrategy : IEmailProcessingStrategy
 
             tasks.Add(_emailSender.SendEmailAsync(
                 _senderDto.Email,
-                client.Configuration.EmailAddress,
+                client.EmailAddress,
                 marketingData.Content,
                 marketingData.Title
             ));

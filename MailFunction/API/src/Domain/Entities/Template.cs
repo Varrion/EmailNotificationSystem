@@ -1,5 +1,5 @@
 ﻿namespace API.Domain.Entities;
-public class Template : BaseAuditableEntity
+public class Template : BaseEntity
 {
     public required string Name { get; set; }
 

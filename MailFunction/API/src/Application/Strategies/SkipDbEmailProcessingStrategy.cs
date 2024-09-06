@@ -38,7 +38,7 @@ public class SkipDbEmailProcessingStrategy : IEmailProcessingStrategy
 
             tasks.Add(_emailSender.SendEmailAsync(
                  _senderDto.Email,
-                client.Configuration.EmailAddress,
+                client.EmailAddress,
                 clientMarketingData.MarketingData.Content,
                 clientMarketingData.MarketingData.Title
             ));

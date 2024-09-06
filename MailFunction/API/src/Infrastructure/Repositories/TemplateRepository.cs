@@ -6,20 +6,20 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Infrastructure.Repositories;
 public class TemplateRepository : ITemplateRepository
 {
-    private readonly EmailServiceDbContext _context;
+    private readonly EmailDbContext _context;
 
-    public TemplateRepository(EmailServiceDbContext context)
+    public TemplateRepository(EmailDbContext context)
     {
         _context = context;
     }
 
     public async Task<Template?> GetTemplateByIdAsync(int id)
     {
-        return await _context.Templates.FirstOrDefaultAsync(x => x.Id == id);
+        return await _context.Template.FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<Template?> GetTemplateByIdOrNameAsync(int id, string name = "")
     {
-        return await _context.Templates.FirstOrDefaultAsync(x => x.Id == id || x.Name == name);
+        return await _context.Template.FirstOrDefaultAsync(x => x.Id == id || x.Name == name);
     }
 }

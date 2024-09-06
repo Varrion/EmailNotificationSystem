@@ -1,6 +1,4 @@
-﻿using API.Application.Common.Interfaces;
-using API.Infrastructure.Data;
-using API.Web.Services;
+﻿using API.Infrastructure.Data;
 using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +10,10 @@ public static class DependencyInjection
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        services.AddScoped<IUser, CurrentUser>();
-
         services.AddHttpContextAccessor();
 
         services.AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>();
+            .AddDbContextCheck<EmailDbContext>();
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 

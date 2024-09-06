@@ -6,17 +6,16 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Infrastructure.Repositories;
 public class ClientRepository : IClientRepository
 {
-    private readonly EmailServiceDbContext _context;
+    private readonly EmailDbContext _context;
 
-    public ClientRepository(EmailServiceDbContext context)
+    public ClientRepository(EmailDbContext context)
     {
         _context = context;
     }
 
     public async Task<Client?> GetClientByIdAsync(int id)
     {
-        return await _context.Clients
-            .Include(c => c.Configuration)
+        return await _context.Client
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 }
