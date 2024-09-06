@@ -7,9 +7,10 @@ public class EmailDbContextFactory : IDesignTimeDbContextFactory<EmailDbContext>
 {
     public EmailDbContext CreateDbContext(string[] args)
     {
-        // Build configuration to get connection string
+        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Web");
+
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(basePath)
             .AddJsonFile("appsettings.json")
             .Build();
 
